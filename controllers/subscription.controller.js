@@ -88,3 +88,30 @@ export const cancelSubscription = async (req, res, next) => {
         next(e);
     }
 }
+
+export const updateSubscription = async (req, res, next) => {
+    try {
+        const updatedSubscription = req.body;
+        console.log(updatedSubscription);
+        const subscription = await Subscription
+            .findByIdAndUpdate(req.params.id, {
+                ...updatedSubscription,
+            }, {new: true, runValidators: true});
+        if(!subscription) {
+            const error = new Error('Subscription does not exist');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if (subscription.user.data !== req.user.id.data) {
+            const error = new Error('You are not an admin of this account to update the subscription.' );
+            error.statusCode = 401;
+            throw error;
+        }
+
+        res.status(200).json({ success: true, message: 'Subscription updated successfully.', data: {subscription} });
+    } catch (e) {
+        next(e);
+    }
+}
+
