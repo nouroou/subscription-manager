@@ -1,20 +1,16 @@
-import User from "../models/user.model.js";
 
 const admin = async (req, res, next) => {
     try {
 
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({message: 'User not found'});
-        }
+        console.log(`USER ID: ${req.user._id}`);
+        console.log(`USER ID: ${req.params.id}`);
 
-        if (user.role === 'admin') {
-          next(true);
-        } else {
-            next(false);
-        }
+        if (req.user.role !== 'admin' || !req.user.role) return res.status(401).json({message: 'You must be admin to perform this action.'});
+
+        next();
+
     } catch (e) {
-        res.status(401).json({ message: 'Unauthorized', error: e});
+        res.status(401).json({ message: 'Unauthorized user', error: e});
     }
 }
 
