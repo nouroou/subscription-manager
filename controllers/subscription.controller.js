@@ -53,9 +53,10 @@ export const getSubscription = async (req, res, next) => {
         const subscription = await Subscription.findById(req.params.id);
         if (!subscription) {
             const error = new Error('Subscription does not exist');
-            error.statusCode = 401;
+            error.statusCode = 404;
             throw error;
         }
+
         res.status(200).json({ success: true, data: subscription });
 
     } catch (e) {
@@ -63,4 +64,27 @@ export const getSubscription = async (req, res, next) => {
     }
 }
 
-export const
+export const cancelSubscription = async (req, res, next) => {
+    try {
+        const subscription = await Subscription.findById(req.params.id);
+        if(!subscription) {
+            const error = new Error('Subscription does not exist');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if (subscription.user.data !== req.user.id.data) {
+            const error = new Error('You are not an admin of this account to update the subscription.' );
+            error.statusCode = 401;
+            throw error;
+        }
+
+        subscription.status = 'canceled';
+        await subscription.save();
+
+
+        res.status(200).json({ success: true, message: 'Subscription canceled successfully.', data: {subscription} });
+    } catch (e) {
+        next(e);
+    }
+}
