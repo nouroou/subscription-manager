@@ -10,11 +10,11 @@ import admin from "../middlewares/admin.middleware.js";
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', admin, getAllSubscriptions);
+subscriptionRouter.get('/', authorize, admin, getAllSubscriptions);
 
-subscriptionRouter.post('/', authorize, createSubscription);
+subscriptionRouter.post('/', authorize,  createSubscription);
 
-subscriptionRouter.get('/:id', authorize, getSubscription);
+subscriptionRouter.get('/:id', authorize, admin, getSubscription);
 
 subscriptionRouter.put('/:id', (req, res) => res.send({title: 'PUT a subscription by id'}));
 
