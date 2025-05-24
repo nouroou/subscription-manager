@@ -15,13 +15,17 @@ export const createSubscription = async (req, res, next) => {
 
 export const getUserSubscriptions = async (req, res, next) => {
     try {
-        if (req.user._id !== req.params.id) {
-            const error = new Error('You\'re not the not the owner of this account.' );
+        if (req.user.id !== req.params.id) {
+            const error = new Error('You are not an admin or the owner of this account.' );
             error.statusCode = 401;
             throw error;
         }
 
         const subscriptions = await Subscription.find({user: req.params.id});
+
+        if (!subscriptions) {
+            res.status(404).json({ success: false, message: 'This user has no subscriptions found.' });
+        }
         res.status(200).json({ success: true, data: subscriptions });
     } catch (e) {
         next(e);
@@ -58,3 +62,5 @@ export const getSubscription = async (req, res, next) => {
         next(e);
     }
 }
+
+export const
