@@ -92,11 +92,12 @@ export const cancelSubscription = async (req, res, next) => {
 export const updateSubscription = async (req, res, next) => {
     try {
         const updatedSubscription = req.body;
-        console.log(updatedSubscription);
+
         const subscription = await Subscription
             .findByIdAndUpdate(req.params.id, {
                 ...updatedSubscription,
             }, {new: true, runValidators: true});
+
         if(!subscription) {
             const error = new Error('Subscription does not exist');
             error.statusCode = 404;
