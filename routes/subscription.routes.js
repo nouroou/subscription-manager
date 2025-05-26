@@ -2,10 +2,10 @@ import {Router} from "express";
 import authorize from "../middlewares/auth.middleware.js";
 import {
     cancelSubscription,
-    createSubscription,
+    createSubscription, deleteSubscription,
     getAllSubscriptions,
     getSubscription,
-    getUserSubscriptions
+    getUserSubscriptions, upcomingRenewals, updateSubscription
 } from "../controllers/subscription.controller.js";
 import admin from "../middlewares/admin.middleware.js";
 
@@ -17,15 +17,15 @@ subscriptionRouter.post('/', authorize,  createSubscription);
 
 subscriptionRouter.get('/:id', authorize, admin, getSubscription);
 
-subscriptionRouter.put('/:id', (req, res) => res.send({title: 'PUT a subscription by id'}));
+subscriptionRouter.put('/:id', authorize, updateSubscription);
 
-subscriptionRouter.delete('/:id', (req, res) => res.send({title: 'DELETE a subscription by id'}));
+subscriptionRouter.delete('/:id', authorize, deleteSubscription);
 
 subscriptionRouter.get('/user/:id', authorize, getUserSubscriptions);
 
 subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
 
-subscriptionRouter.get('/upcoming-renewals', (req, res) => res.send({title: 'GET upcoming renewals'}));
+subscriptionRouter.get('/:id/upcoming-renewals', authorize, upcomingRenewals);
 
 
 export default subscriptionRouter;
