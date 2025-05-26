@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { getUser, getUsers} from "../controllers/user.controller.js";
+import {deleteUser, getUser, getUsers, updateUserName} from "../controllers/user.controller.js";
 import authorize from "../middlewares/auth.middleware.js";
 import admin from "../middlewares/admin.middleware.js";
 
@@ -9,8 +9,8 @@ userRouter.get('/', admin, getUsers);
 
 userRouter.get('/:id', authorize, getUser);
 
-userRouter.put('/:id', (req, res) => res.send({title: 'PUT a user by id'} ));
+userRouter.put('/:id', authorize, updateUserName);
 
-userRouter.delete('/:id', (req, res) => res.send({title: 'DELETE a users'} ));
+userRouter.delete('/:id', authorize, deleteUser);
 
 export default userRouter;
