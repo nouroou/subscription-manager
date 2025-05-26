@@ -84,4 +84,28 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
 
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        const token = jwt.sign({userId: req.user.id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
+
+        const session = await mongoose.startSession();
+
+        await session.endSession();
+
+        res.status(200).json({
+            message: 'Logged out successfully',
+            user: {
+            userId: req.user.id,
+            token: token,
+            },
+        });
+    } catch (e) {
+        next(e);
+    }
 };
