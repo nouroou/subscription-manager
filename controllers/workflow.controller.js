@@ -42,15 +42,14 @@ const sleepUntilReminder = async (context, label, date) => {
     await context.sleepUntil(label, date.toDate());
 }
 
-const triggerReminder = async (context, label) => {
+const triggerReminder = async (context, label, subscription) => {
     return await context.run(label, async ()=> {
         console.log(`Triggering ${label} reminder`);
 
-        await sendReminderEmail(
-            {
+        await sendReminderEmail( {
             to: subscription.user.email,
-            type: reminder.label.subscription,
-
-        })
+            type: label,
+            subscription,
+        });
     });
 }
