@@ -63,3 +63,6 @@ typings/
 
 # IDE config files
 .idea
+
+#GCP
+.gcloudignore
